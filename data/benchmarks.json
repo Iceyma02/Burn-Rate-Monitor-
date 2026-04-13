@@ -1,0 +1,27 @@
+{
+  "B2B SaaS (Seed)": {
+    "avg_burn": 52000,
+    "avg_runway": 18,
+    "avg_mrr_growth": 0.08
+  },
+  "B2B SaaS (Series A)": {
+    "avg_burn": 180000,
+    "avg_runway": 24,
+    "avg_mrr_growth": 0.07
+  },
+  "Fintech (Seed)": {
+    "avg_burn": 75000,
+    "avg_runway": 20,
+    "avg_mrr_growth": 0.09
+  },
+  "E-commerce": {
+    "avg_burn": 40000,
+    "avg_runway": 15,
+    "avg_mrr_growth": 0.06
+  },
+  "Dev Tools": {
+    "avg_burn": 48000,
+    "avg_runway": 22,
+    "avg_mrr_growth": 0.1
+  }
+}

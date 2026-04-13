@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Sequoia Capital",
+    "amount": 300000,
+    "date": "2023-01-15",
+    "type": "Lead"
+  },
+  {
+    "name": "Y Combinator",
+    "amount": 125000,
+    "date": "2023-01-15",
+    "type": "Program"
+  },
+  {
+    "name": "Angel Syndicate",
+    "amount": 200000,
+    "date": "2023-07-01",
+    "type": "Angel"
+  },
+  {
+    "name": "Founders Fund",
+    "amount": 500000,
+    "date": "2024-01-01",
+    "type": "Bridge"
+  }
+]
