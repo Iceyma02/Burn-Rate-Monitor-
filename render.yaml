@@ -3,7 +3,9 @@ services:
     name: burn-rate-monitor
     env: python
     buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn app:server --workers 2 --timeout 120 --bind 0.0.0.0:$PORT
+    startCommand: gunicorn wsgi:application --workers 2 --timeout 120 --bind 0.0.0.0:$PORT
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.0
+      - key: PYTHONUNBUFFERED
+        value: "1"
