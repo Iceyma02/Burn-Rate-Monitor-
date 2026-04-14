@@ -32,7 +32,7 @@ df         = pd.read_csv("data/financials.csv", parse_dates=["date"])
 benchmarks = json.load(open("data/benchmarks.json"))
 investors  = json.load(open("data/investors.json"))
 
-df["runway_months"] = pd.to_numeric(df["runway_months"], errors="coerce").fillna(0)
+df = df.assign(runway_months=pd.to_numeric(df["runway_months"], errors="coerce").fillna(0))
 
 latest = df.iloc[-1]
 prior  = df.iloc[-2]
