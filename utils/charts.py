@@ -22,6 +22,9 @@ BG_CARD  = "#12151d"
 BG_DEEP  = "#0d0f14"
 BORDER   = "rgba(255,255,255,0.06)"
 
+# Shared transition config — smooth 400ms ease on all chart updates
+TRANSITION = dict(duration=400, easing='cubic-in-out')
+
 LAYOUT_BASE = dict(
     paper_bgcolor = "rgba(0,0,0,0)",
     plot_bgcolor  = "rgba(0,0,0,0)",
@@ -56,6 +59,7 @@ def _layout(**kwargs):
     # deep copy nested
     base["xaxis"] = dict(**LAYOUT_BASE["xaxis"])
     base["yaxis"] = dict(**LAYOUT_BASE["yaxis"])
+    base["transition"] = TRANSITION
     base.update(kwargs)
     return base
 
@@ -321,18 +325,27 @@ def burn_trend_forecast(df: pd.DataFrame) -> go.Figure:
 
 # ── 7. Scenario Comparison Bar ────────────────────────────────────────────────
 def scenario_comparison(base_runway, scenario_runway) -> go.Figure:
+    # Cap display at 60 months for profitable companies
+    CAP = 60
+    base_disp = min(float(base_runway), CAP)
+    scen_disp = min(float(scenario_runway), CAP)
+
+    def label(v, raw):
+        if raw >= 99: return "Profitable"
+        return f"{v:.1f} mo"
+
     labels = ["Base Case", "Scenario"]
-    values = [base_runway, scenario_runway]
+    values = [base_disp, scen_disp]
     colors = [ACCENT if v >= 12 else ACCENT3 if v >= 6 else DANGER for v in values]
 
     fig = go.Figure(go.Bar(
         x=labels, y=values,
         marker_color=colors,
         marker_opacity=0.85,
-        text=[f"{v:.1f} mo" for v in values],
+        text=[label(base_disp, base_runway), label(scen_disp, scenario_runway)],
         textposition="outside",
         textfont=dict(family="'DM Mono', monospace", size=11, color=TEXT_PRI),
-        hovertemplate="<b>%{x}</b>: %{y:.1f} months<extra></extra>",
+        hovertemplate="<b>%{x}</b>: %{text}<extra></extra>",
     ))
 
     fig.add_hline(y=12, line_color=ACCENT3, line_width=1, line_dash="dot",
@@ -340,8 +353,9 @@ def scenario_comparison(base_runway, scenario_runway) -> go.Figure:
                   annotation_font_color=ACCENT3,
                   annotation_font_size=9)
 
+    max_y = max(values) if max(values) > 0 else 24
     layout = _layout(height=200)
     layout["yaxis"]["title"] = dict(text="Months runway", font=dict(size=10))
-    layout["yaxis"]["range"] = [0, max(values) * 1.3]
+    layout["yaxis"]["range"] = [0, max_y * 1.35]
     fig.update_layout(**layout)
     return fig
