@@ -28,11 +28,13 @@ from utils.export import generate_pdf
 # pip install dash-bootstrap-components
 
 # ── Load data ─────────────────────────────────────────────────────────────────
-df         = pd.read_csv("data/financials.csv", parse_dates=["date"])
+_raw       = pd.read_csv("data/financials.csv")
 benchmarks = json.load(open("data/benchmarks.json"))
 investors  = json.load(open("data/investors.json"))
 
-df = df.assign(runway_months=pd.to_numeric(df["runway_months"], errors="coerce").fillna(0))
+df = _raw.copy()
+df["date"]          = pd.to_datetime(df["date"].astype(str))
+df["runway_months"] = pd.to_numeric(df["runway_months"].astype(str), errors="coerce").fillna(0)
 
 latest = df.iloc[-1]
 prior  = df.iloc[-2]
