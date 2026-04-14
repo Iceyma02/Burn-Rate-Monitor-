@@ -387,21 +387,26 @@ app.layout = html.Div([
 # ── Tab switching ──────────────────────────────────────────────────────────────
 @app.callback(
     Output("scenario-panel", "children"),
-    Output("active-tab",     "data"),
-    Output("tab-burn",    "className"),
-    Output("tab-revenue", "className"),
-    Output("tab-hire",    "className"),
-    Output("tab-raise",   "className"),
+    Output("active-tab",         "data"),
+    Output("tab-burn",           "className"),
+    Output("tab-revenue",        "className"),
+    Output("tab-hire",           "className"),
+    Output("tab-raise",          "className"),
+    Output("store-burn-pct",     "data", allow_duplicate=True),
+    Output("store-new-mrr",      "data", allow_duplicate=True),
+    Output("store-new-hires",    "data", allow_duplicate=True),
+    Output("store-bridge-raise", "data", allow_duplicate=True),
     Input("tab-burn",    "n_clicks"),
     Input("tab-revenue", "n_clicks"),
     Input("tab-hire",    "n_clicks"),
     Input("tab-raise",   "n_clicks"),
     State("active-tab",  "data"),
+    prevent_initial_call="initial_duplicate",
 )
 def switch_tab(nb, nr, nh, nf, current):
     ctx = callback_context
     if not ctx.triggered:
-        return tab_panel_burn(), "burn", "tab-btn active","tab-btn","tab-btn","tab-btn"
+        return tab_panel_burn(), "burn", "tab-btn active","tab-btn","tab-btn","tab-btn", 0,0,0,0
     tid = ctx.triggered[0]["prop_id"].split(".")[0]
     mapping = {
         "tab-burn":    ("burn",    tab_panel_burn()),
@@ -412,7 +417,7 @@ def switch_tab(nb, nr, nh, nf, current):
     name, panel = mapping.get(tid, ("burn", tab_panel_burn()))
     c = {t: "tab-btn active" if t == f"tab-{name}" else "tab-btn"
          for t in ["tab-burn","tab-revenue","tab-hire","tab-raise"]}
-    return panel, name, c["tab-burn"], c["tab-revenue"], c["tab-hire"], c["tab-raise"]
+    return panel, name, c["tab-burn"], c["tab-revenue"], c["tab-hire"], c["tab-raise"], 0,0,0,0
 
 
 # ── Store values when sliders change ──────────────────────────────────────────
